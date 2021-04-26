@@ -29,10 +29,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-# # FOR PostgreSQL ....
-# # # Присваиваем значение переменной окружения параметру настроек
-# # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@127.0.0.1:5432/postgres"
+# ## Присваиваем значение переменной окружения параметру настроек
+# # # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+# # app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@127.0.0.1:5432/postgres" FOR PostgreSQL ....
+# #
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -220,10 +220,40 @@ class Teacher(db.Model):
     __tablename__ = "teachers"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     schedule = db.Column(db.String, nullable=False)
-
+    rating = db.Column(db.Float, nullable=False)
+    picture = db.Column(db.String, nullable=False)
+    about = db.Column(db.String, nullable=False)
+    goals = db.Column(db.String, nullable=False)
 
 db.create_all()
+
+with open('teachers.json', 'r', encoding='utf-8') as f:
+        teachers_json = json.load(f)
+        teachers_data_list = []
+
+for teacher in teachers:
+    db.session.add(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
+                            rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
+                            goals=str(teacher["goals"])))
+
+db.session.commit()
+
+#         for teacher in teachers_json:
+#
+#             print(teacher['price'])
+#             teachers_data_list.append(teacher)
+#         #     for key, value in teacher.items():
+#         #         #print(teacher[key])
+#         #         teachers_data_list.append(teacher[key])
+#         # print(teachers_data_list)
+# description = teachers_data_list[0]
+# schedule_time = teachers_data_list[1]
+# goals = teachers_data_list[2]
+#
+# print(description)
+# db.create_all()
 
 if __name__ == "__main__":
     app.run()
