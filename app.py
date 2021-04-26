@@ -2,6 +2,8 @@ import random
 
 import json
 
+import os
+
 import flask
 
 from flask import Flask, render_template, request
@@ -15,6 +17,23 @@ from wtforms import StringField
 
 app = Flask(__name__)
 app.debug = True
+
+app.secret_key = "123"
+
+
+# FOR SQLite
+#
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.db"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+
+# # FOR PostgreSQL ....
+# # # Присваиваем значение переменной окружения параметру настроек
+# # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@127.0.0.1:5432/postgres"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 with open('teachers.json', 'r', encoding='utf-8') as f:
@@ -196,6 +215,15 @@ def booking_done_pg():
                            clientPhone=clientPhone
                            )
 
+
+class Teacher(db.Model):
+    __tablename__ = "teachers"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    schedule = db.Column(db.String, nullable=False)
+
+
+db.create_all()
 
 if __name__ == "__main__":
     app.run()
