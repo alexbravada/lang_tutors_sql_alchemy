@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block container %}
+  <main class="container mt-3">
+    <div class="card my-4 mx-auto">
+      <div class="card-body m-2 m-md-4">
+        <article class="row">
+          <div class="col-5"><img src="{{ id_teacher_list['picture'] }}" class="img-fluid" alt=""></div>
+          <div class="col-7">
+
+            <h6 class="teacher=info">
+
+              <h1 class="h2">{{ id_teacher_list['name'] }}</h1>{% for goal in ru_teacher_goal_list %}
+              <h6><span class="badge badge-secondary mr-2">{{ goal }}</span></h6>{% endfor %}<p>Рейтинг: {{ id_teacher_list['rating'] }} Ставка: {{ id_teacher_list['price'] }} / час</p>
+              <p>{{ id_teacher_list['about'] }}</p>
+
+            </section>
+
+            <section class="available">
+
+              <h4 class="mb-4 mt-5">Записаться на пробный урок</h4>
+
+              <h6 class="mt-4">Понедельник</h6>
+              {% for time, bool in id_teacher_list['free']['mon'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[0] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['mon'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+              <h6 class="mt-4">Вторник</h6>
+              {% for time, bool in id_teacher_list['free']['tue'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[1] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['tue'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+              <h6 class="mt-4">Среда</h6>
+              {% for time, bool in id_teacher_list['free']['wed'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[2] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['wed'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+              <h6 class="mt-4">Четверг</h6>
+              {% for time, bool in id_teacher_list['free']['thu'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[3] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['thu'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+              <h6 class="mt-4">Пятница</h6>
+              {% for time, bool in id_teacher_list['free']['fri'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[4] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['fri'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+              <h6 class="mt-4">Суббота</h6>
+              {% for time, bool in id_teacher_list['free']['sat'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[5] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['sat'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+              <h6 class="mt-4">Воскресенье</h6>
+              {% for time, bool in id_teacher_list['free']['sun'].items() %} {% if bool == True %}
+              <a href="/booking/{{ id_tutor }}/{{ eng_dayname[6] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['sun'].values() %}<p>Нет свободных уроков</p>{% endif %}
+
+            </section>
+
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>{% endblock %}
+
+</html>

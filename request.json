@@ -1,0 +1,26 @@
+[
+    {
+        "clientName": "Ann",
+        "clientPhone": "888 999 0000 12313",
+        "clientGoal": "relocate",
+        "clientWeektime": "7-10"
+    },
+    {
+        "clientName": "Henry",
+        "clientPhone": "+4994443332333",
+        "clientGoal": "relocate",
+        "clientWeektime": "3-5"
+    },
+    {
+        "clientName": "5333edsd",
+        "clientPhone": "3341414",
+        "clientGoal": "work",
+        "clientWeektime": "5-7"
+    },
+    {
+        "clientName": "",
+        "clientPhone": "",
+        "clientGoal": "work",
+        "clientWeektime": "5-7"
+    }
+]
