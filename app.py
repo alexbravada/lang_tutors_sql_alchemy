@@ -10,6 +10,8 @@ from flask import Flask, render_template, request
 
 from flask_sqlalchemy import SQLAlchemy
 
+from flask_migrate import Migrate
+
 from flask_wtf import FlaskForm
 
 from wtforms import StringField
@@ -27,7 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
+migrate = Migrate(app, db)
 
 # ## Присваиваем значение переменной окружения параметру настроек
 # # # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
@@ -226,34 +228,51 @@ class Teacher(db.Model):
     picture = db.Column(db.String, nullable=False)
     about = db.Column(db.String, nullable=False)
     goals = db.Column(db.String, nullable=False)
+    students = db.relationship("Booking")
 
-db.create_all()
+class Request(db.Model):
+    __tablename__ = "requests"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    phone = db.Column(db.String, nullable=False)
+    goal = db.Column(db.String, nullable=False)
+    time_in_week = db.Column(db.String, nullable=False)
 
-with open('teachers.json', 'r', encoding='utf-8') as f:
-        teachers_json = json.load(f)
-        teachers_data_list = []
+
+class Booking(db.Model):
+    __tablename__ = "booking"
+    id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String, nullable=False)
+    user_phone = db.Column(db.String, nullable=False)
+    weekday = db.Column(db.String, nullable=False)
+    time = db.Column(db.String, nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"))
+    teacher = db.relationship("Teacher")
+
+
+# db.create_all()
+
+# with open('teachers.json', 'r', encoding='utf-8') as f:
+#         teachers_json = json.load(f)
+#         teachers_data_list = []
+
+# for teacher in teachers:
+#     db.session.add(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
+#                             rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
+#                             goals=str(teacher["goals"])))
+#
 
 for teacher in teachers:
-    db.session.add(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
-                            rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
-                            goals=str(teacher["goals"])))
+    #print(type(teacher))
+    #print(teacher['free'])
+    for t in teacher['free']['mon']:
+        print(t)
+    #a = teacher.values()
+    #print(a['friday'])
 
-db.session.commit()
 
-#         for teacher in teachers_json:
-#
-#             print(teacher['price'])
-#             teachers_data_list.append(teacher)
-#         #     for key, value in teacher.items():
-#         #         #print(teacher[key])
-#         #         teachers_data_list.append(teacher[key])
-#         # print(teachers_data_list)
-# description = teachers_data_list[0]
-# schedule_time = teachers_data_list[1]
-# goals = teachers_data_list[2]
-#
-# print(description)
-# db.create_all()
+# db.session.commit()
+
 
 if __name__ == "__main__":
     app.run()
