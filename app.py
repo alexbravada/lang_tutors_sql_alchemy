@@ -260,13 +260,14 @@ class Booking(db.Model):
 #     db.session.add(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
 #                             rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
 #                             goals=str(teacher["goals"])))
-#
 
-for teacher in teachers:
-    #print(type(teacher))
-    #print(teacher['free'])
-    for t in teacher['free']['mon']:
-        print(t)
+
+# for teacher in teachers:
+#     #print(type(teacher))
+#     #print(teacher['free'])
+#     for t in teacher['free']['mon']:
+#         print(t)
+
     #a = teacher.values()
     #print(a['friday'])
 
