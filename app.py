@@ -228,15 +228,7 @@ class Teacher(db.Model):
     picture = db.Column(db.String, nullable=False)
     about = db.Column(db.String, nullable=False)
     goals = db.Column(db.String, nullable=False)
-    students = db.relationship("Booking")
-
-class Request(db.Model):
-    __tablename__ = "requests"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    phone = db.Column(db.String, nullable=False)
-    goal = db.Column(db.String, nullable=False)
-    time_in_week = db.Column(db.String, nullable=False)
+    students = db.relationship("Booking", back_populates="teacher")
 
 
 class Booking(db.Model):
@@ -247,35 +239,35 @@ class Booking(db.Model):
     weekday = db.Column(db.String, nullable=False)
     time = db.Column(db.String, nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"))
-    teacher = db.relationship("Teacher")
+    teacher = db.relationship("Teacher", back_populates="students")
 
 
-# db.create_all()
-
-# with open('teachers.json', 'r', encoding='utf-8') as f:
-#         teachers_json = json.load(f)
-#         teachers_data_list = []
-
-# for teacher in teachers:
-#     db.session.add(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
-#                             rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
-#                             goals=str(teacher["goals"])))
+class Request(db.Model):
+    __tablename__ = "requests"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    phone = db.Column(db.String, nullable=False)
+    goal = db.Column(db.String, nullable=False)
+    time_in_week = db.Column(db.String, nullable=False)
 
 
-# for teacher in teachers:
-#     #print(type(teacher))
-#     #print(teacher['free'])
-#     for t in teacher['free']['mon']:
-#         print(t)
+def seed_db():
+    teachers_list = []
+    for teacher in teachers:
+        teachers_list.append(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
+                            rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
+                            goals=str(teacher["goals"])))
 
-    #a = teacher.values()
-    #print(a['friday'])
+    db.session.add_all(teachers_list)
+    db.session.commit()
 
 
-# db.session.commit()
+
+
+# if __name__ == "__main__":
+#     seed_db()
 
 
 if __name__ == "__main__":
     app.run()
-
 
