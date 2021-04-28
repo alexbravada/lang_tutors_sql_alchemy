@@ -184,8 +184,6 @@ def tutor_page(id_tutor):
 # tutor selection request page
 @app.route('/request/', methods=["GET", "POST"])
 def tutor_selection_request():
-    with open('goals.json', 'r', encoding='utf-8') as f:
-        goals_file = json.load(f)
     return render_template('request.html',
                            goals_file=goals_file,
                            )
@@ -199,18 +197,9 @@ def tutor_selection_done():
     fname = request.form.get('fname')
     fphone = request.form.get('fphone')
 
-    dict_from_request = {"clientName": fname,
-                         "clientPhone": fphone,
-                         "clientGoal": goal,
-                         "clientWeektime": week_time
-                         }
-
-    with open('request.json', 'r', encoding='utf-8') as f:
-        request_list = json.load(f)
-        request_list.append(dict_from_request)
-
-    with open('request.json', 'w', encoding='utf-8') as f:
-        json.dump(request_list, f, indent=4, ensure_ascii=False)
+    request_to_db = Request(name=fname, phone=fphone, goal=goal, time_in_week=week_time)
+    db.session.add(request_to_db)
+    db.session.commit()
 
     return render_template('request_done.html',
                            goal=goal,
