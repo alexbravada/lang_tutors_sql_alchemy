@@ -56,6 +56,39 @@ emoji = ['⛱', '🏫', '🏢', '🚜 🐷', '💻']
 all_random_teachers = random.sample(teachers, len(teachers))
 
 
+class Teacher(db.Model):
+    __tablename__ = "teachers"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    schedule = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    picture = db.Column(db.String, nullable=False)
+    about = db.Column(db.String, nullable=False)
+    goals = db.Column(db.String, nullable=False)
+    students = db.relationship("Booking", back_populates="teacher")
+
+
+class Booking(db.Model):
+    __tablename__ = "booking"
+    id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String, nullable=False)
+    user_phone = db.Column(db.String, nullable=False)
+    weekday = db.Column(db.String, nullable=False)
+    time = db.Column(db.String, nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"))
+    teacher = db.relationship("Teacher", back_populates="students")
+
+
+class Request(db.Model):
+    __tablename__ = "requests"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    phone = db.Column(db.String, nullable=False)
+    goal = db.Column(db.String, nullable=False)
+    time_in_week = db.Column(db.String, nullable=False)
+
+
 # main page
 @app.route('/')
 def render_index():
@@ -111,25 +144,41 @@ def goal_page(goal):
 # personal tutor page
 @app.route('/profiles/<int:id_tutor>/')
 def tutor_page(id_tutor):
-    # i deleted with open teachers json file from here
-    id_teacher_list = [i for i in teachers if i['id'] == id_tutor][0]
-    teacher_goal_list = [goal for goal in id_teacher_list['goals']]
+    ## i deleted with open teachers json file from here
+    #id_teacher_list = [i for i in teachers if i['id'] == id_tutor][0]
+    #teacher_goal_list = [goal for goal in id_teacher_list['goals']]
     ru_teacher_goal_list = []
 
+    teacher_from_id = db.session.query(Teacher).get_or_404(id_tutor)
+
     for goal, ru_goal in goals_file.items():
-        if goal in teacher_goal_list:
+        if goal in json.loads(teacher_from_id.goals):
             ru_teacher_goal_list.append(ru_goal)
 
-    # {% for goal in teacher_goal_list %}{% endfor %} {{ i }}
+    #print(json.loads(teacher_from_id.goals))
+    #print(teacher_from_id.name, json.loads(teacher_from_id.schedule)['mon'])
+    # for teacher in teacher_from_id.all():
+    #     print("Номер учителя", teacher.id, "Его имя", teacher.name)
+
     return render_template('profile.html',
                            id_tutor=id_tutor,
-                           id_teacher_list=id_teacher_list,
-                           dayname=dayname,
+                           schedule=json.loads(teacher_from_id.schedule),
+                           name=teacher_from_id.name,
+                           #goals=json.loads(teacher_from_id.goals),
+                           rating=teacher_from_id.rating,
+                           price=teacher_from_id.price,
+                           picture=teacher_from_id.picture,
+                           about=teacher_from_id.about,
                            eng_dayname=eng_dayname,
-                           goals_file=goals_file,
-                           teacher_goal_list=teacher_goal_list,
-                           ru_teacher_goal_list=ru_teacher_goal_list
+                           ru_teacher_goal_list=ru_teacher_goal_list,
+                           #id_teacher_list=id_teacher_list,
+                           #dayname=dayname,
+                           #goals_file=goals_file,
+                           #teacher_goal_list=teacher_goal_list,
                            )
+
+
+
 
 
 # tutor selection request page
@@ -195,6 +244,12 @@ def booking_done_pg():
     clientName = request.form["clientName"]
     clientPhone = request.form["clientPhone"]
 
+    booking_to_database = Booking(user_name=clientName, user_phone=clientPhone, weekday=cWeekday, time=cTime,
+                                  teacher_id=cTeacher)
+    print(booking_to_database.user_name)
+    db.session.add(booking_to_database)
+    db.session.commit()
+
     dict_from_booking = {"clientName": clientName,
                          "clientPhone": clientPhone,
                          "cTeacher": cTeacher,
@@ -218,56 +273,25 @@ def booking_done_pg():
                            )
 
 
-class Teacher(db.Model):
-    __tablename__ = "teachers"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    schedule = db.Column(db.String, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
-    picture = db.Column(db.String, nullable=False)
-    about = db.Column(db.String, nullable=False)
-    goals = db.Column(db.String, nullable=False)
-    students = db.relationship("Booking", back_populates="teacher")
-
-
-class Booking(db.Model):
-    __tablename__ = "booking"
-    id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String, nullable=False)
-    user_phone = db.Column(db.String, nullable=False)
-    weekday = db.Column(db.String, nullable=False)
-    time = db.Column(db.String, nullable=False)
-    teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"))
-    teacher = db.relationship("Teacher", back_populates="students")
-
-
-class Request(db.Model):
-    __tablename__ = "requests"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    phone = db.Column(db.String, nullable=False)
-    goal = db.Column(db.String, nullable=False)
-    time_in_week = db.Column(db.String, nullable=False)
 
 
 def seed_db():
     teachers_list = []
     for teacher in teachers:
-        teachers_list.append(Teacher(name=teacher["name"], price=teacher["price"], schedule=str(teacher["free"]),
+        teachers_list.append(Teacher(id=teacher["id"], name=teacher["name"], price=teacher["price"], schedule=json.dumps(teacher["free"]),
                             rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
-                            goals=str(teacher["goals"])))
+                            goals=json.dumps(teacher["goals"])))
 
     db.session.add_all(teachers_list)
     db.session.commit()
 
 
 
-
+#
 # if __name__ == "__main__":
 #     seed_db()
 
 
 if __name__ == "__main__":
     app.run()
-
+#

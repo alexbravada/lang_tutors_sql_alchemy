@@ -4,14 +4,14 @@
     <div class="card my-4 mx-auto">
       <div class="card-body m-2 m-md-4">
         <article class="row">
-          <div class="col-5"><img src="{{ id_teacher_list['picture'] }}" class="img-fluid" alt=""></div>
+          <div class="col-5"><img src="{{ picture }}" class="img-fluid" alt=""></div>
           <div class="col-7">
 
             <h6 class="teacher=info">
 
-              <h1 class="h2">{{ id_teacher_list['name'] }}</h1>{% for goal in ru_teacher_goal_list %}
-              <h6><span class="badge badge-secondary mr-2">{{ goal }}</span></h6>{% endfor %}<p>Рейтинг: {{ id_teacher_list['rating'] }} Ставка: {{ id_teacher_list['price'] }} / час</p>
-              <p>{{ id_teacher_list['about'] }}</p>
+              <h1 class="h2">{{ name }}</h1>{% for goal in ru_teacher_goal_list %}
+              <h6><span class="badge badge-secondary mr-2">{{ goal }}</span></h6>{% endfor %}<p>Рейтинг: {{ rating }} Ставка: {{ price }} / час</p>
+              <p>{{ about }}</p>
 
             </section>
 
@@ -20,39 +20,39 @@
               <h4 class="mb-4 mt-5">Записаться на пробный урок</h4>
 
               <h6 class="mt-4">Понедельник</h6>
-              {% for time, bool in id_teacher_list['free']['mon'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['mon'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[0] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['mon'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['mon'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
               <h6 class="mt-4">Вторник</h6>
-              {% for time, bool in id_teacher_list['free']['tue'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['tue'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[1] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['tue'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['tue'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
               <h6 class="mt-4">Среда</h6>
-              {% for time, bool in id_teacher_list['free']['wed'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['wed'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[2] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['wed'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['wed'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
               <h6 class="mt-4">Четверг</h6>
-              {% for time, bool in id_teacher_list['free']['thu'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['thu'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[3] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['thu'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['thu'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
               <h6 class="mt-4">Пятница</h6>
-              {% for time, bool in id_teacher_list['free']['fri'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['fri'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[4] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['fri'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['fri'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
               <h6 class="mt-4">Суббота</h6>
-              {% for time, bool in id_teacher_list['free']['sat'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['sat'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[5] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['sat'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['sat'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
               <h6 class="mt-4">Воскресенье</h6>
-              {% for time, bool in id_teacher_list['free']['sun'].items() %} {% if bool == True %}
+              {% for time, bool in schedule['sun'].items() %} {% if bool == True %}
               <a href="/booking/{{ id_tutor }}/{{ eng_dayname[6] }}/{{ time.partition(':')[0] }}/" class="btn btn-outline-success mr-2">
-                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in id_teacher_list['free']['sun'].values() %}<p>Нет свободных уроков</p>{% endif %}
+                {{ time }} свободно</a>{% endif %}{% endfor %}{% if True not in schedule['sun'].values() %}<p>Нет свободных уроков</p>{% endif %}
 
             </section>
 
