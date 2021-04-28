@@ -239,19 +239,6 @@ def booking_done_pg():
     db.session.add(booking_to_database)
     db.session.commit()
 
-    dict_from_booking = {"clientName": clientName,
-                         "clientPhone": clientPhone,
-                         "cTeacher": cTeacher,
-                         "cWeekday": cWeekday,
-                         "cTime": cTime}
-
-    with open('booking.json', 'r', encoding='utf-8') as f:
-        booking_list = json.load(f)
-        booking_list.append(dict_from_booking)
-
-    with open('booking.json', 'w', encoding='utf-8') as f:
-        json.dump(booking_list, f, indent=4, ensure_ascii=False)
-
     return render_template('booking_done.html',
                            dayname=dayname,
                            cWeekday=cWeekday,
@@ -260,8 +247,6 @@ def booking_done_pg():
                            clientName=clientName,
                            clientPhone=clientPhone
                            )
-
-
 
 
 def seed_db():
@@ -275,12 +260,9 @@ def seed_db():
     db.session.commit()
 
 
-
 #
 # if __name__ == "__main__":
 #     seed_db()
 
-
 if __name__ == "__main__":
     app.run()
-#
