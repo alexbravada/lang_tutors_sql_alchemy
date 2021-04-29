@@ -27,7 +27,7 @@ app.secret_key = "123"
 
 # FOR SQLite
 #
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data_sql/test.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -91,7 +91,6 @@ class Request(db.Model):
 
 
 all_teachers_sql = db.session.query(Teacher).all()
-
 # all_random_teachers = random.sample(all_teachers_sql, len(all_teachers_sql))
 
 
