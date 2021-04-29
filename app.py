@@ -10,6 +10,8 @@ from flask import Flask, render_template, request
 
 from flask_sqlalchemy import SQLAlchemy
 
+from sqlalchemy.sql.expression import func
+
 from flask_migrate import Migrate
 
 from flask_wtf import FlaskForm
@@ -53,7 +55,8 @@ with open('goals.json', 'r', encoding='utf-8') as f:
 
 emoji = ['⛱', '🏫', '🏢', '🚜 🐷', '💻']
 # &#128055;
-all_random_teachers = random.sample(teachers, len(teachers))
+
+# all_random_teachers = random.sample(teachers, len(teachers))
 
 
 class Teacher(db.Model):
@@ -89,12 +92,13 @@ class Request(db.Model):
     time_in_week = db.Column(db.String, nullable=False)
 
 
+all_teachers_sql = db.session.query(Teacher).all()
+
+
 # main page
 @app.route('/')
 def render_index():
-    # deleted with open teachers json file
-    random_teachers_list = random.sample(teachers, 6)
-
+    random_teachers_list = random.sample(all_teachers_sql, 6)
     return render_template('index.html',
                            random_teachers_list=random_teachers_list,
                            )
@@ -103,10 +107,13 @@ def render_index():
 # show us page with all tutors
 @app.route('/all/')
 def all_page():
-    teachers_sorted_by_rating = sorted(teachers, key=lambda teacher: teacher['rating'], reverse=True)
-    count_teachers = len(teachers)
+    all_teachers_sql = db.session.query(Teacher).all()
+    print(all_teachers_sql)
+    #teachers_sorted_by_rating = sorted(teachers, key=lambda teacher: teacher['rating'], reverse=True)
+    teachers_sorted_by_rating = sorted(all_teachers_sql, key=lambda teacher: teacher.rating, reverse=True)
+    count_teachers = len(all_teachers_sql)
     return render_template('all.html',
-                           teachers=teachers,
+                           #teachers=teachers,
                            count_teachers=count_teachers,
                            all_random_teachers=all_random_teachers,
                            teachers_sorted_by_rating=teachers_sorted_by_rating,
@@ -127,14 +134,13 @@ def goal_page(goal):
     else:
         emoji_item = emoji[3]
 
-    teachers_goal_list = [teacher for teacher in teachers if goal in teacher['goals']]
-    sorted_by_rating_teachers_goal_list = sorted(teachers_goal_list, key=lambda teachers: teachers['rating'],
-                                                 reverse=True)
+
+    teachers_goal_list = db.session.query(Teacher).filter(Teacher.goals.contains(goal)).all()
+    sorted_by_rating_teachers_goal_list = sorted(teachers_goal_list, key=lambda teachers: teachers.rating, reverse=True)
+
     return render_template('goal.html',
                            goal=goal,
                            goals_file=goals_file,
-                           teachers=teachers,
-                           teachers_goal_list=teachers_goal_list,
                            sorted_by_rating_teachers_goal_list=sorted_by_rating_teachers_goal_list,
                            emoji=emoji,
                            emoji_item=emoji_item
