@@ -56,8 +56,6 @@ with open('goals.json', 'r', encoding='utf-8') as f:
 emoji = ['⛱', '🏫', '🏢', '🚜 🐷', '💻']
 # &#128055;
 
-# all_random_teachers = random.sample(teachers, len(teachers))
-
 
 class Teacher(db.Model):
     __tablename__ = "teachers"
@@ -94,6 +92,10 @@ class Request(db.Model):
 
 all_teachers_sql = db.session.query(Teacher).all()
 
+# all_random_teachers = random.sample(all_teachers_sql, len(all_teachers_sql))
+
+all_random_teachers = db.session.query(Teacher).order_by(func.random()).all()
+
 
 # main page
 @app.route('/')
@@ -107,18 +109,16 @@ def render_index():
 # show us page with all tutors
 @app.route('/all/')
 def all_page():
-    all_teachers_sql = db.session.query(Teacher).all()
-    print(all_teachers_sql)
+    print(all_random_teachers)
     #teachers_sorted_by_rating = sorted(teachers, key=lambda teacher: teacher['rating'], reverse=True)
     teachers_sorted_by_rating = sorted(all_teachers_sql, key=lambda teacher: teacher.rating, reverse=True)
     count_teachers = len(all_teachers_sql)
     return render_template('all.html',
-                           #teachers=teachers,
                            count_teachers=count_teachers,
                            all_random_teachers=all_random_teachers,
                            teachers_sorted_by_rating=teachers_sorted_by_rating,
                            )
-
+#teachers=teachers,
 
 # show us page with tutors, what depends on var /<goal>
 @app.route('/goals/<goal>/')
