@@ -118,16 +118,16 @@ def all_page():
     selected_ex = ''
     selected_ch = ''
     if request.method == "POST":
-        if request.form["cars"] == "by_random":
+        if request.form["filter"] == "by_random":
             selected_r = 'selected'
             teachers_sorted = all_random_teachers
-        if request.form["cars"] == "by_rating":
+        if request.form["filter"] == "by_rating":
             selected_rt = 'selected'
             teachers_sorted = db.session.query(Teacher).order_by(Teacher.rating.desc())
-        if request.form["cars"] == "f_expensive":
+        if request.form["filter"] == "f_expensive":
             selected_ex = 'selected'
             teachers_sorted = db.session.query(Teacher).order_by(Teacher.price.desc())
-        if request.form["cars"] == "f_cheap":
+        if request.form["filter"] == "f_cheap":
             selected_ch = 'selected'
             teachers_sorted = db.session.query(Teacher).order_by(Teacher.price)
 
