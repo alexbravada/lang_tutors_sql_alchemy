@@ -16,11 +16,11 @@
 
             <form class="float-right d-inline-block" method="POST">
               <div class="form-inline">
-                <select class="custom-select my-1 mr-2" id="inlineFormCustomSelectPref">
-                  <option selected value="by_random">В случайном порядке</option>
-                  <option value="by_rating">Сначала лучшие по рейтингу</option>
-                  <option value="f_exspensive">Сначала дорогие</option>
-                  <option value="f_cheap">Сначала недорогие</option>
+                <select id="cars" name="cars" class="custom-select my-1 mr-2" >
+                  <option {{ selected_r }} value="by_random">В случайном порядке</option>
+                  <option {{ selected_rt }} value="by_rating">Сначала лучшие по рейтингу</option>
+                  <option {{ selected_ex }} value="f_expensive">Сначала дорогие</option>
+                  <option {{ selected_ch }} value="f_cheap">Сначала недорогие</option>
                 </select>
                 <button type="submit" class="btn btn-primary my-1">Сортировать</button>
               </div>
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        {% for teacher in all_random_teachers %}
+        {% for teacher in teachers_sorted %}
         <div class="card mb-4">
           <div class="card-body">
             <div class="row">

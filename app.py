@@ -110,21 +110,34 @@ def render_index():
 @app.route('/all/', methods=['GET', 'POST'])
 def all_page():
     all_random_teachers = db.session.query(Teacher).order_by(func.random()).all()
-    teachers_sorted_by_rating = sorted(all_teachers_sql, key=lambda teacher: teacher.rating, reverse=True)
+    #teachers_sorted_by_rating = sorted(all_teachers_sql, key=lambda teacher: teacher.rating, reverse=True)
     count_teachers = len(all_teachers_sql)
-    # by_rating = request.form["by_rating"]
-    # print(by_rating)
-    # if request.method == "POST":
-    #     if request.form["by_rating"] == "by_rating":
-    #         all_random_teachers == teachers_sorted_by_rating
-    #     else:
-    #         all_random_teachers = all_random_teachers
-
+    teachers_sorted = all_random_teachers
+    selected_r = ''
+    selected_rt = ''
+    selected_ex = ''
+    selected_ch = ''
+    if request.method == "POST":
+        if request.form["cars"] == "by_random":
+            selected_r = 'selected'
+            teachers_sorted = all_random_teachers
+        if request.form["cars"] == "by_rating":
+            selected_rt = 'selected'
+            teachers_sorted = db.session.query(Teacher).order_by(Teacher.rating.desc())
+        if request.form["cars"] == "f_expensive":
+            selected_ex = 'selected'
+            teachers_sorted = db.session.query(Teacher).order_by(Teacher.price.desc())
+        if request.form["cars"] == "f_cheap":
+            selected_ch = 'selected'
+            teachers_sorted = db.session.query(Teacher).order_by(Teacher.price)
 
     return render_template('all.html',
                            count_teachers=count_teachers,
-                           all_random_teachers=all_random_teachers,
-                           teachers_sorted_by_rating=teachers_sorted_by_rating,
+                           teachers_sorted=teachers_sorted,
+                           selected_r=selected_r,
+                           selected_rt=selected_rt,
+                           selected_ex=selected_ex,
+                           selected_ch=selected_ch
                            )
 
 
