@@ -150,7 +150,9 @@ def tutor_page(id_tutor):
     ru_teacher_goal_list = []
 
     teacher_from_id = db.session.query(Teacher).get_or_404(id_tutor)
-
+    #print(teacher_from_id.students[0].user_name)
+    #for username in teacher_from_id.students:
+        #print(username.user_name)
     for goal, ru_goal in goals_file.items():
         if goal in json.loads(teacher_from_id.goals):
             ru_teacher_goal_list.append(ru_goal)
