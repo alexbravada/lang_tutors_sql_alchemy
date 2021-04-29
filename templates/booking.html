@@ -5,8 +5,8 @@
       <div class="col-10 col-md-6 offset-1 offset-md-3 mb-3">
         <form action="/booking_done/" class="card mb-3" method="POST">
           <div class="card-body text-center pt-5">
-            <img src="{{ teacher_name['picture'] }}" class="mb-3" width="95" alt="">
-            <h2 class="h5 card-title mt-2 mb-2">{{ teacher_name['name'] }}</h2>
+            <img src="{{ teacher_name.picture }}" class="mb-3" width="95" alt="">
+            <h2 class="h5 card-title mt-2 mb-2">{{ teacher_name.name }}</h2>
             <p class="my-1">Запись на пробный урок</p>
             <p class="my-1">{{ ru_dayname }}, {{ booking_time }}:00</p>
           </div>

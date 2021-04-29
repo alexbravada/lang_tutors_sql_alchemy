@@ -27,7 +27,7 @@ app.secret_key = "123"
 
 # FOR SQLite
 #
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data_sql/test.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data_sql//test.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -41,7 +41,7 @@ migrate = Migrate(app, db)
 
 
 with open('teachers.json', 'r', encoding='utf-8') as f:
-    teachers = json.load(f)
+    teachers_json = json.load(f)
 
 
 with open('dayname.json', 'r', encoding='utf-8') as f:
@@ -91,6 +91,7 @@ class Request(db.Model):
 
 
 all_teachers_sql = db.session.query(Teacher).all()
+
 # all_random_teachers = random.sample(all_teachers_sql, len(all_teachers_sql))
 
 
@@ -154,10 +155,11 @@ def goal_page(goal):
     else:
         emoji_item = emoji[3]
 
+    sorted_by_rating_teachers_goal_list = \
+        db.session.query(Teacher).filter(Teacher.goals.contains(goal)).order_by(Teacher.rating.desc())
 
-    teachers_goal_list = db.session.query(Teacher).filter(Teacher.goals.contains(goal)).all()
-
-    sorted_by_rating_teachers_goal_list = sorted(teachers_goal_list, key=lambda teachers: teachers.rating, reverse=True)
+    # teachers_goal_list = db.session.query(Teacher).filter(Teacher.goals.contains(goal)).all()
+    #sorted_by_rating_teachers_goal_list = sorted(teachers_goal_list, key=lambda teachers_json: teachers_json.rating, reverse=True)
 
     return render_template('goal.html',
                            goal=goal,
@@ -173,17 +175,9 @@ def goal_page(goal):
 def tutor_page(id_tutor):
     ru_teacher_goal_list = []
     teacher_from_id = db.session.query(Teacher).get_or_404(id_tutor)
-    #print(teacher_from_id.students[0].user_name)
-    #for username in teacher_from_id.students:
-        #print(username.user_name)
     for goal, ru_goal in goals_file.items():
         if goal in json.loads(teacher_from_id.goals):
             ru_teacher_goal_list.append(ru_goal)
-
-    #print(json.loads(teacher_from_id.goals))
-    #print(teacher_from_id.name, json.loads(teacher_from_id.schedule)['mon'])
-    # for teacher in teacher_from_id.all():
-    #     print("Номер учителя", teacher.id, "Его имя", teacher.name)
 
     return render_template('profile.html',
                            id_tutor=id_tutor,
@@ -196,10 +190,6 @@ def tutor_page(id_tutor):
                            about=teacher_from_id.about,
                            eng_dayname=eng_dayname,
                            ru_teacher_goal_list=ru_teacher_goal_list,
-                           #id_teacher_list=id_teacher_list,
-                           #dayname=dayname,
-                           #goals_file=goals_file,
-                           #teacher_goal_list=teacher_goal_list,
                            )
 
 
@@ -234,15 +224,16 @@ def tutor_selection_done():
 # contains and handle form of tutor booking
 @app.route('/booking/<int:id_tutor>/<day_name_link>/<booking_time>/', methods=["GET", "POST"])
 def booking_form(id_tutor, day_name_link, booking_time):
-    teacher_name = [i for i in teachers if i['id'] == id_tutor][0]
+    teacher_name = db.session.query(Teacher).get_or_404(id_tutor)
     ru_dayname = dayname[day_name_link]
 
     return render_template('booking.html',
                            id_tutor=id_tutor,
+                           booking_time=booking_time,
                            day_name_link=day_name_link,
                            ru_dayname=ru_dayname,
                            teacher_name=teacher_name,
-                           booking_time=booking_time,
+
                            )
 
 
@@ -257,7 +248,7 @@ def booking_done_pg():
 
     booking_to_database = Booking(user_name=clientName, user_phone=clientPhone, weekday=cWeekday, time=cTime,
                                   teacher_id=cTeacher)
-    print(booking_to_database.user_name)
+
     db.session.add(booking_to_database)
     db.session.commit()
 
@@ -273,16 +264,20 @@ def booking_done_pg():
 
 def seed_db():
     teachers_list = []
-    for teacher in teachers:
-        teachers_list.append(Teacher(id=teacher["id"], name=teacher["name"], price=teacher["price"], schedule=json.dumps(teacher["free"]),
-                            rating=teacher["rating"], picture=teacher["picture"], about=teacher["about"],
-                            goals=json.dumps(teacher["goals"])))
+    for teacher in teachers_json:
+        teachers_list.append(Teacher(id=teacher["id"], name=teacher["name"],
+                                     price=teacher["price"],
+                                     schedule=json.dumps(teacher["free"]),
+                                     rating=teacher["rating"],
+                                     picture=teacher["picture"],
+                                     about=teacher["about"],
+                                     goals=json.dumps(teacher["goals"])))
 
     db.session.add_all(teachers_list)
     db.session.commit()
 
 
-#
+
 # if __name__ == "__main__":
 #     seed_db()
 

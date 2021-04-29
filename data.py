@@ -393,8 +393,8 @@ teachers = [
 ]
 
 
-# with open("teachers.json", "w", encoding='utf-8') as f:
-#     json.dump(teachers, f, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': '))
+# with open("teachers_json.json", "w", encoding='utf-8') as f:
+#     json.dump(teachers_json, f, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': '))
 #
 #
 # with open("goals.json", "w", encoding='utf-8') as f:
