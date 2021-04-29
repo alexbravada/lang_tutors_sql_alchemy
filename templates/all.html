@@ -14,13 +14,13 @@
 
             <p class="lead float-left d-inline-block mt-2 mb-0"><strong>{{ count_teachers }} преподавателей в базе</strong></p>
 
-            <form class="float-right d-inline-block">
+            <form class="float-right d-inline-block" method="POST">
               <div class="form-inline">
                 <select class="custom-select my-1 mr-2" id="inlineFormCustomSelectPref">
-                  <option selected>В случайном порядке</option>
-                  <option value="3">Сначала лучшие по рейтингу</option>
-                  <option value="1">Сначала дорогие</option>
-                  <option value="2">Сначала недорогие</option>
+                  <option selected value="by_random">В случайном порядке</option>
+                  <option value="by_rating">Сначала лучшие по рейтингу</option>
+                  <option value="f_exspensive">Сначала дорогие</option>
+                  <option value="f_cheap">Сначала недорогие</option>
                 </select>
                 <button type="submit" class="btn btn-primary my-1">Сортировать</button>
               </div>

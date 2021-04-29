@@ -107,16 +107,26 @@ def render_index():
 
 
 # show us page with all tutors
-@app.route('/all/')
+@app.route('/all/', methods=['GET', 'POST'])
 def all_page():
     all_random_teachers = db.session.query(Teacher).order_by(func.random()).all()
     teachers_sorted_by_rating = sorted(all_teachers_sql, key=lambda teacher: teacher.rating, reverse=True)
     count_teachers = len(all_teachers_sql)
+    # by_rating = request.form["by_rating"]
+    # print(by_rating)
+    # if request.method == "POST":
+    #     if request.form["by_rating"] == "by_rating":
+    #         all_random_teachers == teachers_sorted_by_rating
+    #     else:
+    #         all_random_teachers = all_random_teachers
+
+
     return render_template('all.html',
                            count_teachers=count_teachers,
                            all_random_teachers=all_random_teachers,
                            teachers_sorted_by_rating=teachers_sorted_by_rating,
                            )
+
 
 # show us page with tutors, what depends on var /<goal>
 @app.route('/goals/<goal>/')
@@ -134,6 +144,7 @@ def goal_page(goal):
 
 
     teachers_goal_list = db.session.query(Teacher).filter(Teacher.goals.contains(goal)).all()
+
     sorted_by_rating_teachers_goal_list = sorted(teachers_goal_list, key=lambda teachers: teachers.rating, reverse=True)
 
     return render_template('goal.html',
@@ -148,11 +159,7 @@ def goal_page(goal):
 # personal tutor page
 @app.route('/profiles/<int:id_tutor>/')
 def tutor_page(id_tutor):
-    ## i deleted with open teachers json file from here
-    #id_teacher_list = [i for i in teachers if i['id'] == id_tutor][0]
-    #teacher_goal_list = [goal for goal in id_teacher_list['goals']]
     ru_teacher_goal_list = []
-
     teacher_from_id = db.session.query(Teacher).get_or_404(id_tutor)
     #print(teacher_from_id.students[0].user_name)
     #for username in teacher_from_id.students:
@@ -182,9 +189,6 @@ def tutor_page(id_tutor):
                            #goals_file=goals_file,
                            #teacher_goal_list=teacher_goal_list,
                            )
-
-
-
 
 
 # tutor selection request page
